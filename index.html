@@ -3,105 +3,510 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>초등 6학년 학생회 실시간 안건판</title>
+  <title>6-5 학급회의</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    * { box-sizing: border-box; font-family: 'Pretendard', sans-serif, system-ui; }
-    body { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f6f8; color: #333; }
-    h1 { text-align: center; font-size: 1.5rem; margin-bottom: 20px; color: #2d3748; }
-    .input-box { background: white; padding: 16px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .input-group { display: flex; gap: 8px; margin-bottom: 8px; }
-    input[type="text"] { padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 14px; }
-    #proposer { width: 35%; }
-    #title { width: 65%; }
-    button { width: 100%; padding: 10px; background-color: #3182ce; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-    button:active { background-color: #2b6cb0; }
-    ul { list-style: none; padding: 0; margin: 0; }
-    li { background: white; padding: 14px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; }
-    .agenda-title { font-weight: 600; font-size: 15px; }
-    .agenda-meta { font-size: 12px; color: #718096; }
+    :root {
+      --primary: #4F46E5;
+      --primary-light: #EEF2FF;
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", Roboto, sans-serif; margin: 0; padding: 0; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 60px; }
+
+    /* 헤더 */
+    header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-container { max-width: 800px; margin: 0 auto; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .title-group h1 { font-size: 1.25rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .user-tag { font-size: 0.85rem; padding: 4px 10px; border-radius: 999px; background: var(--border); font-weight: 600; }
+    .user-tag.teacher { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+
+    /* 단계 표시기 */
+    .steps-container { max-width: 800px; margin: 16px auto; padding: 0 20px; }
+    .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; background: #fff; padding: 10px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
+    .step-item { font-size: 0.75rem; color: var(--text-muted); padding: 8px 4px; border-radius: 6px; font-weight: 600; }
+    .step-item.active { background: var(--primary); color: #fff; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.25); }
+
+    /* 본문 */
+    main { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+    .card { background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border); padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+    .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* 교사 컨트롤 패널 */
+    .teacher-panel { border: 2px solid #FDE68A; background: #FFFDF5; }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    button { cursor: pointer; border: none; border-radius: 8px; font-weight: 600; transition: all 0.15s; font-size: 0.9rem; }
+    .btn { padding: 9px 16px; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: #E2E8F0; color: #334155; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-warning { background: var(--warning); color: #fff; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* 입력 폼 */
+    .form-row { display: flex; gap: 8px; }
+    input[type="text"], select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; }
+    input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--primary); ring: 2px solid var(--primary-light); }
+
+    /* 안건 리스트 */
+    .agenda-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #fff; }
+    .agenda-card.active-target { border: 2px solid var(--primary); background: #FAF5FF; }
+    .agenda-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .agenda-title { font-size: 1rem; font-weight: 700; color: #0F172A; }
+    .agenda-info { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* 투표 결과 바 */
+    .vote-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+    .vote-box { background: var(--bg); padding: 8px; border-radius: 8px; text-align: center; font-size: 0.85rem; font-weight: 700; }
+    .vote-box.agree { color: #059669; }
+    .vote-box.disagree { color: #DC2626; }
+    .vote-box.abstain { color: #64748B; }
+
+    /* 의견 영역 */
+    .comments-list { max-height: 250px; overflow-y: auto; margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .comment-item { font-size: 0.85rem; padding: 8px 12px; border-radius: 6px; background: #F1F5F9; }
+    .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-right: 4px; }
+    .badge-pros { background: #DCFCE7; color: #166534; }
+    .badge-cons { background: #FEE2E2; color: #991B1B; }
+    .badge-etc { background: #E0E7FF; color: #3730A3; }
+
+    /* 모달 */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-box { background: #fff; width: 90%; max-width: 360px; padding: 24px; border-radius: 14px; text-align: center; }
   </style>
 </head>
 <body>
 
-  <h1>📋 6학년 학생회 안건 게시판</h1>
-
-  <div class="input-box">
-    <div class="input-group">
-      <input type="text" id="proposer" placeholder="이름 (예: 김철수)" maxlength="10">
-      <input type="text" id="title" placeholder="회의 안건을 입력하세요" maxlength="50">
+  <!-- 입장 모달 (이름 등록 / 교사 선택) -->
+  <div id="loginModal" class="modal-overlay">
+    <div class="modal-box">
+      <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">6-5 학급회의 입장</h2>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">본인의 이름 또는 역할을 입력해 주세요.</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <input type="text" id="userNameInput" placeholder="이름 (예: 홍길동)" maxlength="8">
+        <button class="btn btn-primary" onclick="enterAsStudent()">학생으로 입장하기</button>
+        
+        <div style="margin: 8px 0; border-top: 1px dashed var(--border);"></div>
+        <input type="password" id="teacherPwInput" placeholder="교사 비밀번호 입력" style="display:none;">
+        <button class="btn btn-secondary" id="btnShowTeacherPw" onclick="toggleTeacherMode()">관리 교사 로그인</button>
+      </div>
     </div>
-    <button onclick="addAgenda()">안건 등록하기</button>
   </div>
 
-  <ul id="agenda-list"></ul>
+  <!-- 메인 상단 -->
+  <header>
+    <div class="header-container">
+      <div class="title-group">
+        <h1>🏫 6-5 학급회의</h1>
+      </div>
+      <div>
+        <span id="userBadge" class="user-tag">미접속</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 회의 진행 절차 바 -->
+  <div class="steps-container">
+    <div class="steps">
+      <div class="step-item" id="step-READY">1. 회의 시작</div>
+      <div class="step-item" id="step-AGENDAS">2. 안건 등록</div>
+      <div class="step-item" id="step-COMMENTS">3. 의견 나눔</div>
+      <div class="step-item" id="step-VOTE">4. 표결</div>
+      <div class="step-item" id="step-FINISH">5. 최종 정리</div>
+    </div>
+  </div>
+
+  <main>
+    <!-- [교사 전용 제어 패널] -->
+    <div id="teacherControl" class="card teacher-panel" style="display: none;">
+      <div class="card-title">
+        <span>⚙️ 교사 회의 운영 패널</span>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="setStage('READY')">회의 준비</button>
+        <button class="btn btn-primary" onclick="setStage('AGENDAS')">1. 안건 등록 시작</button>
+        <button class="btn btn-primary" onclick="setStage('COMMENTS')">2. 의견 수렴 진행</button>
+        <button class="btn btn-primary" onclick="setStage('VOTE')">3. 표결 단계 진입</button>
+        <button class="btn btn-success" onclick="setStage('FINISH')">4. 회의 마감 및 정리</button>
+        <button class="btn btn-warning" onclick="downloadHwpDocument()">📝 회의록 한글 문서 다운로드</button>
+      </div>
+    </div>
+
+    <!-- [1단계] 안건 등록 영역 -->
+    <div id="agendaInputSection" class="card" style="display: none;">
+      <div class="card-title">안건 발의하기</div>
+      <div class="form-row">
+        <input type="text" id="agendaTitle" placeholder="안건 명을 입력하세요 (예: 쉬는 시간 휴대폰 보관 규칙 변경)">
+        <button class="btn btn-primary" style="white-space: nowrap;" onclick="submitAgenda()">등록</button>
+      </div>
+    </div>
+
+    <!-- [2단계] 안건별 상세 회의 & 실시간 투표 섹션 -->
+    <div id="activeDiscussionSection" class="card" style="display: none;">
+      <div class="card-title">
+        <span>💡 현재 진행 중인 안건</span>
+        <span id="activeAgendaBadge" class="badge badge-pros">선택됨</span>
+      </div>
+      <h3 id="currentActiveTitle" style="font-size: 1.15rem; margin-bottom: 12px;">안건을 선택해 주세요.</h3>
+
+      <!-- 투표 진행 영역 (단계가 VOTE일 때 활성화) -->
+      <div id="votingControls" style="display: none; margin-top: 14px; padding: 14px; background: #EEF2FF; border-radius: 8px;">
+        <p style="font-weight: 700; margin-bottom: 8px;">🗳️ 실시간 투표 진행</p>
+        <div class="btn-group">
+          <button class="btn btn-success" onclick="castVote('AGREE')">찬성</button>
+          <button class="btn btn-danger" onclick="castVote('DISAGREE')">반대</button>
+          <button class="btn btn-secondary" onclick="castVote('ABSTAIN')">기권</button>
+        </div>
+        <div class="vote-results" style="margin-top: 12px;">
+          <div class="vote-box agree">찬성: <span id="countAgree">0</span></div>
+          <div class="vote-box disagree">반대: <span id="countDisagree">0</span></div>
+          <div class="vote-box abstain">기권: <span id="countAbstain">0</span></div>
+        </div>
+      </div>
+
+      <!-- 의견 수렴 영역 (단계가 COMMENTS일 때 활성화) -->
+      <div id="commentsSection" style="margin-top: 16px;">
+        <p style="font-weight: 700; margin-bottom: 6px;">의견 남기기</p>
+        <div class="form-row" style="margin-bottom: 10px;">
+          <select id="opinionType" style="width: 100px;">
+            <option value="PROS">찬성</option>
+            <option value="CONS">반대</option>
+            <option value="ETC">기타</option>
+          </select>
+          <input type="text" id="opinionContent" placeholder="자신의 타당한 근거를 적어주세요.">
+          <button class="btn btn-secondary" onclick="submitOpinion()">남기기</button>
+        </div>
+        <div class="comments-list" id="commentsList">
+          <!-- 실시간 의견 표시 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 안건 목록 카드 -->
+    <div class="card">
+      <div class="card-title">
+        <span>등록된 전체 안건 목록</span>
+        <span id="agendaCount" style="font-size: 0.8rem; color: var(--text-muted);">0건</span>
+      </div>
+      <div id="agendaContainer">
+        <!-- 안건 목록 렌더링 -->
+      </div>
+    </div>
+  </main>
 
   <script>
-    // ⚠️ Supabase 대시보드의 값으로 변경해주세요.
+    // -------------------------------------------------------------
+    // 1. Supabase 접속 설정
+    // -------------------------------------------------------------
     const SUPABASE_URL = "https://mwuukqboltovxoibuicb.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_0Lv4RWRlaEQEGb7Wj1MLng_WqONxQ60";
+    const SUPABASE_KEY = "YOUR_ANON_KEY_HERE"; // 발급받은 Anon Public Key를 입력하세요
+    const TEACHER_PW = "1234"; // 관리 교사용 간이 비밀번호
+
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const listElement = document.getElementById("agenda-list");
+    // 사용자 상태
+    let currentUser = { name: "", isTeacher: false };
+    let currentMeetingState = { stage: "READY", active_agenda_id: null };
+    let agendaList = [];
+    let commentsList = [];
+    let currentVotes = [];
 
-    // 화면에 안건 하나 렌더링
-    function renderItem(item, prepend = false) {
-      const li = document.createElement("li");
-      li.id = `item-${item.id}`;
-      li.innerHTML = `
-        <span class="agenda-title">${item.title}</span>
-        <span class="agenda-meta">${item.proposer}</span>
-      `;
-      if (prepend) {
-        listElement.prepend(li);
+    // -------------------------------------------------------------
+    // 2. 인증 & 입장 처리
+    // -------------------------------------------------------------
+    function toggleTeacherMode() {
+      const pwInput = document.getElementById("teacherPwInput");
+      const btn = document.getElementById("btnShowTeacherPw");
+      if (pwInput.style.display === "none") {
+        pwInput.style.display = "block";
+        pwInput.focus();
+        btn.textContent = "교사 권한 확인 및 입장";
       } else {
-        listElement.appendChild(li);
+        if (pwInput.value === TEACHER_PW) {
+          currentUser = { name: "담임 교사", isTeacher: true };
+          finishLogin();
+        } else {
+          alert("교사 비밀번호가 일치하지 않습니다.");
+        }
       }
     }
 
-    // 기존 안건 불러오기
-    async function loadAgendas() {
-      const { data, error } = await client
-        .from("agenda")
-        .select("*")
-        .order("id", { ascending: false });
+    function enterAsStudent() {
+      const name = document.getElementById("userNameInput").value.trim();
+      if (!name) {
+        alert("이름을 입력해 주세요.");
+        return;
+      }
+      currentUser = { name: name, isTeacher: false };
+      finishLogin();
+    }
 
-      if (!error && data) {
-        listElement.innerHTML = "";
-        data.forEach(item => renderItem(item));
+    function finishLogin() {
+      document.getElementById("loginModal").style.display = "none";
+      const tag = document.getElementById("userBadge");
+      tag.textContent = currentUser.name;
+      if (currentUser.isTeacher) {
+        tag.classList.add("teacher");
+        document.getElementById("teacherControl").style.display = "block";
+      }
+      initData();
+    }
+
+    // -------------------------------------------------------------
+    // 3. 실시간 리스너 & 초기 데이터 로드
+    // -------------------------------------------------------------
+    async function initData() {
+      await fetchMeetingState();
+      await fetchAgendas();
+
+      // Supabase 리얼타임 감지
+      client.channel("realtime-session")
+        .on("postgres_changes", { event: "*", schema: "public", table: "meeting_state" }, () => fetchMeetingState())
+        .on("postgres_changes", { event: "*", schema: "public", table: "agenda" }, () => fetchAgendas())
+        .on("postgres_changes", { event: "*", schema: "public", table: "comments" }, () => fetchComments(currentMeetingState.active_agenda_id))
+        .on("postgres_changes", { event: "*", schema: "public", table: "votes" }, () => fetchVotes(currentMeetingState.active_agenda_id))
+        .subscribe();
+    }
+
+    async function fetchMeetingState() {
+      const { data } = await client.from("meeting_state").select("*").eq("id", 1).single();
+      if (data) {
+        currentMeetingState = data;
+        updateUIByStage();
+        if (data.active_agenda_id) {
+          fetchComments(data.active_agenda_id);
+          fetchVotes(data.active_agenda_id);
+        }
       }
     }
 
-    // 새 안건 등록
-    async function addAgenda() {
-      const proposer = document.getElementById("proposer").value.trim();
-      const title = document.getElementById("title").value.trim();
+    async function fetchAgendas() {
+      const { data } = await client.from("agenda").select("*").order("id", { ascending: true });
+      if (data) {
+        agendaList = data;
+        renderAgendas();
+      }
+    }
 
-      if (!proposer || !title) {
-        alert("이름과 안건 내용을 모두 입력해주세요!");
+    async function fetchComments(agendaId) {
+      if (!agendaId) return;
+      const { data } = await client.from("comments").select("*").eq("agenda_id", agendaId).order("id", { ascending: true });
+      if (data) {
+        commentsList = data;
+        renderComments();
+      }
+    }
+
+    async function fetchVotes(agendaId) {
+      if (!agendaId) return;
+      const { data } = await client.from("votes").select("*").eq("agenda_id", agendaId);
+      if (data) {
+        currentVotes = data;
+        renderVoteCounts();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 4. UI 갱신 로직
+    // -------------------------------------------------------------
+    function updateUIByStage() {
+      const stage = currentMeetingState.stage;
+      
+      // 단계 표시기 활성화
+      document.querySelectorAll(".step-item").forEach(el => el.classList.remove("active"));
+      const currentStepEl = document.getElementById(`step-${stage}`);
+      if (currentStepEl) currentStepEl.classList.add("active");
+
+      // 폼 제어
+      document.getElementById("agendaInputSection").style.display = (stage === "AGENDAS") ? "block" : "none";
+      
+      const activeSection = document.getElementById("activeDiscussionSection");
+      const votingControls = document.getElementById("votingControls");
+      const commentsSection = document.getElementById("commentsSection");
+
+      if (currentMeetingState.active_agenda_id) {
+        activeSection.style.display = "block";
+        const currentItem = agendaList.find(a => a.id === currentMeetingState.active_agenda_id);
+        if (currentItem) {
+          document.getElementById("currentActiveTitle").textContent = `📌 ${currentItem.title} (발의: ${currentItem.proposer})`;
+        }
+        votingControls.style.display = (stage === "VOTE") ? "block" : "none";
+        commentsSection.style.display = (stage === "COMMENTS" || stage === "VOTE") ? "block" : "none";
+      } else {
+        activeSection.style.display = "none";
+      }
+    }
+
+    function renderAgendas() {
+      const container = document.getElementById("agendaContainer");
+      document.getElementById("agendaCount").textContent = `${agendaList.length}건`;
+      container.innerHTML = "";
+
+      if (agendaList.length === 0) {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:10px;">등록된 안건이 없습니다.</p>`;
         return;
       }
 
-      const { error } = await client
-        .from("agenda")
-        .insert([{ proposer, title }]);
+      agendaList.forEach((agenda) => {
+        const isActive = currentMeetingState.active_agenda_id === agenda.id;
+        const div = document.createElement("div");
+        div.className = `agenda-card ${isActive ? "active-target" : ""}`;
+        
+        let teacherActions = "";
+        if (currentUser.isTeacher) {
+          teacherActions = `
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="setActiveAgenda(${agenda.id})">회의대상 지정</button>
+              <button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteAgenda(${agenda.id})">삭제</button>
+            </div>
+          `;
+        }
 
-      if (error) {
-        alert("등록 중 오류가 발생했습니다.");
-      } else {
-        document.getElementById("title").value = "";
+        div.innerHTML = `
+          <div class="agenda-header">
+            <div>
+              <div class="agenda-title">${agenda.title}</div>
+              <div class="agenda-info">제안자: ${agenda.proposer}</div>
+            </div>
+            ${teacherActions}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderComments() {
+      const box = document.getElementById("commentsList");
+      box.innerHTML = "";
+      commentsList.forEach(c => {
+        const item = document.createElement("div");
+        item.className = "comment-item";
+        let badgeClass = c.opinion_type === "PROS" ? "badge-pros" : c.opinion_type === "CONS" ? "badge-cons" : "badge-etc";
+        let badgeText = c.opinion_type === "PROS" ? "찬성" : c.opinion_type === "CONS" ? "반대" : "기타";
+
+        item.innerHTML = `
+          <span class="badge ${badgeClass}">${badgeText}</span>
+          <strong>${c.author}:</strong> ${c.content}
+        `;
+        box.appendChild(item);
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function renderVoteCounts() {
+      const agree = currentVotes.filter(v => v.vote_choice === "AGREE").length;
+      const disagree = currentVotes.filter(v => v.vote_choice === "DISAGREE").length;
+      const abstain = currentVotes.filter(v => v.vote_choice === "ABSTAIN").length;
+
+      document.getElementById("countAgree").textContent = `${agree}표`;
+      document.getElementById("countDisagree").textContent = `${disagree}표`;
+      document.getElementById("countAbstain").textContent = `${abstain}표`;
+    }
+
+    // -------------------------------------------------------------
+    // 5. 교사 및 학생 상호작용 함수
+    // -------------------------------------------------------------
+    async function setStage(stageName) {
+      await client.from("meeting_state").update({ stage: stageName }).eq("id", 1);
+    }
+
+    async function setActiveAgenda(agendaId) {
+      await client.from("meeting_state").update({ active_agenda_id: agendaId }).eq("id", 1);
+    }
+
+    async function deleteAgenda(agendaId) {
+      if (!confirm("안건을 삭제하시겠습니까? 관련 의견과 표결도 사라집니다.")) return;
+      await client.from("agenda").delete().eq("id", agendaId);
+      if (currentMeetingState.active_agenda_id === agendaId) {
+        await client.from("meeting_state").update({ active_agenda_id: null }).eq("id", 1);
       }
     }
 
-    // Supabase 실시간 수신 설정
-    client
-      .channel("public:agenda")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "agenda" }, payload => {
-        renderItem(payload.new, true);
-      })
-      .subscribe();
+    async function submitAgenda() {
+      const title = document.getElementById("agendaTitle").value.trim();
+      if (!title) return alert("안건 내용을 작성하세요.");
+      await client.from("agenda").insert([{ title, proposer: currentUser.name }]);
+      document.getElementById("agendaTitle").value = "";
+    }
 
-    loadAgendas();
+    async function submitOpinion() {
+      const content = document.getElementById("opinionContent").value.trim();
+      const type = document.getElementById("opinionType").value;
+      if (!content) return alert("의견을 작성해 주세요.");
+
+      await client.from("comments").insert([{
+        agenda_id: currentMeetingState.active_agenda_id,
+        author: currentUser.name,
+        opinion_type: type,
+        content: content
+      }]);
+      document.getElementById("opinionContent").value = "";
+    }
+
+    async function castVote(choice) {
+      const agendaId = currentMeetingState.active_agenda_id;
+      if (!agendaId) return;
+
+      const { error } = await client.from("votes").upsert(
+        { agenda_id: agendaId, voter: currentUser.name, vote_choice: choice },
+        { onConflict: 'agenda_id,voter' }
+      );
+
+      if (error) {
+        alert("투표 반영에 실패했습니다.");
+      } else {
+        alert(`${choice === 'AGREE' ? '찬성' : choice === 'DISAGREE' ? '반대' : '기권'} 투표를 완료했습니다.`);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 6. 회의록 문서(한글 HWP/Word 호환) 다운로드
+    // -------------------------------------------------------------
+    async function downloadHwpDocument() {
+      let docContent = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+        <head><meta charset="utf-8"><title>6-5 학급회의록</title></head>
+        <body>
+          <h1 style="text-align:center;">6-5 학급회의 최종 결과록</h1>
+          <p><strong>작성일시:</strong> ${new Date().toLocaleDateString('ko-KR')}</p>
+          <hr/>
+          <h2>■ 결정 및 토의 안건 목록</h2>
+      `;
+
+      for (const agenda of agendaList) {
+        const { data: vData } = await client.from("votes").select("*").eq("agenda_id", agenda.id);
+        const agree = vData ? vData.filter(v => v.vote_choice === "AGREE").length : 0;
+        const disagree = vData ? vData.filter(v => v.vote_choice === "DISAGREE").length : 0;
+        const abstain = vData ? vData.filter(v => v.vote_choice === "ABSTAIN").length : 0;
+
+        docContent += `
+          <h3>안건: ${agenda.title}</h3>
+          <p>- 제안자: ${agenda.proposer}</p>
+          <p>- 표결 결과: 찬성 ${agree}표 / 반대 ${disagree}표 / 기권 ${abstain}표</p>
+          <br/>
+        `;
+      }
+
+      docContent += `</body></html>`;
+
+      const blob = new Blob([docContent], { type: 'application/msword;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `6-5_학급회의록_${new Date().toISOString().slice(0,10)}.hwp`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   </script>
 </body>
 </html>
