@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>초등 6학년 학생회 실시간 안건판</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; font-family: 'Pretendard', sans-serif, system-ui; }
+    body { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f6f8; color: #333; }
+    h1 { text-align: center; font-size: 1.5rem; margin-bottom: 20px; color: #2d3748; }
+    .input-box { background: white; padding: 16px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .input-group { display: flex; gap: 8px; margin-bottom: 8px; }
+    input[type="text"] { padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 14px; }
+    #proposer { width: 35%; }
+    #title { width: 65%; }
+    button { width: 100%; padding: 10px; background-color: #3182ce; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    button:active { background-color: #2b6cb0; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { background: white; padding: 14px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; }
+    .agenda-title { font-weight: 600; font-size: 15px; }
+    .agenda-meta { font-size: 12px; color: #718096; }
+  </style>
+</head>
+<body>
+
+  <h1>📋 6학년 학생회 안건 게시판</h1>
+
+  <div class="input-box">
+    <div class="input-group">
+      <input type="text" id="proposer" placeholder="이름 (예: 김철수)" maxlength="10">
+      <input type="text" id="title" placeholder="회의 안건을 입력하세요" maxlength="50">
+    </div>
+    <button onclick="addAgenda()">안건 등록하기</button>
+  </div>
+
+  <ul id="agenda-list"></ul>
+
+  <script>
+    // ⚠️ Supabase 대시보드의 값으로 변경해주세요.
+    const SUPABASE_URL = "https://mwuukqboltovxoibuicb.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_0Lv4RWRlaEQEGb7Wj1MLng_WqONxQ60";
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const listElement = document.getElementById("agenda-list");
+
+    // 화면에 안건 하나 렌더링
+    function renderItem(item, prepend = false) {
+      const li = document.createElement("li");
+      li.id = `item-${item.id}`;
+      li.innerHTML = `
+        <span class="agenda-title">${item.title}</span>
+        <span class="agenda-meta">${item.proposer}</span>
+      `;
+      if (prepend) {
+        listElement.prepend(li);
+      } else {
+        listElement.appendChild(li);
+      }
+    }
+
+    // 기존 안건 불러오기
+    async function loadAgendas() {
+      const { data, error } = await client
+        .from("agenda")
+        .select("*")
+        .order("id", { ascending: false });
+
+      if (!error && data) {
+        listElement.innerHTML = "";
+        data.forEach(item => renderItem(item));
+      }
+    }
+
+    // 새 안건 등록
+    async function addAgenda() {
+      const proposer = document.getElementById("proposer").value.trim();
+      const title = document.getElementById("title").value.trim();
+
+      if (!proposer || !title) {
+        alert("이름과 안건 내용을 모두 입력해주세요!");
+        return;
+      }
+
+      const { error } = await client
+        .from("agenda")
+        .insert([{ proposer, title }]);
+
+      if (error) {
+        alert("등록 중 오류가 발생했습니다.");
+      } else {
+        document.getElementById("title").value = "";
+      }
+    }
+
+    // Supabase 실시간 수신 설정
+    client
+      .channel("public:agenda")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "agenda" }, payload => {
+        renderItem(payload.new, true);
+      })
+      .subscribe();
+
+    loadAgendas();
+  </script>
+</body>
+</html>
