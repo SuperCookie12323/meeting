@@ -21,200 +21,201 @@
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", Roboto, sans-serif; margin: 0; padding: 0; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 60px; }
 
-    /* 헤더 */
+    /* 상단 헤더 */
     header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
     .header-container { max-width: 800px; margin: 0 auto; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .title-group h1 { font-size: 1.25rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 8px; }
-    .user-tag { font-size: 0.85rem; padding: 4px 10px; border-radius: 999px; background: var(--border); font-weight: 600; }
+    .title-group h1 { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
+    .header-right { display: flex; align-items: center; gap: 8px; }
+    .user-tag { font-size: 0.85rem; padding: 5px 12px; border-radius: 999px; background: #E2E8F0; font-weight: 600; }
     .user-tag.teacher { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+    .btn-logout { font-size: 0.75rem; padding: 5px 10px; background: #CBD5E1; color: #334155; border-radius: 6px; }
 
-    /* 단계 표시기 */
+    /* 단계 표시 바 */
     .steps-container { max-width: 800px; margin: 16px auto; padding: 0 20px; }
     .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; background: #fff; padding: 10px; border-radius: 12px; border: 1px solid var(--border); text-align: center; }
-    .step-item { font-size: 0.75rem; color: var(--text-muted); padding: 8px 4px; border-radius: 6px; font-weight: 600; }
+    .step-item { font-size: 0.75rem; color: var(--text-muted); padding: 8px 4px; border-radius: 6px; font-weight: 600; transition: all 0.2s; }
     .step-item.active { background: var(--primary); color: #fff; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.25); }
 
-    /* 본문 */
+    /* 메인 콘텐츠 */
     main { max-width: 800px; margin: 0 auto; padding: 0 20px; }
     .card { background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border); padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
     .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
 
-    /* 교사 컨트롤 패널 */
-    .teacher-panel { border: 2px solid #FDE68A; background: #FFFDF5; }
+    /* 교사 제어창 */
+    .teacher-panel { border: 2px solid #FCD34D; background: #FFFDF5; }
+    .teacher-panel h3 { font-size: 0.95rem; margin-bottom: 10px; color: #92400E; }
     .btn-group { display: flex; flex-wrap: wrap; gap: 8px; }
-    button { cursor: pointer; border: none; border-radius: 8px; font-weight: 600; transition: all 0.15s; font-size: 0.9rem; }
-    .btn { padding: 9px 16px; }
+    button { cursor: pointer; border: none; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: background 0.15s; }
+    .btn { padding: 9px 15px; }
     .btn-primary { background: var(--primary); color: #fff; }
-    .btn-primary:hover { opacity: 0.9; }
     .btn-secondary { background: #E2E8F0; color: #334155; }
     .btn-danger { background: var(--danger); color: #fff; }
     .btn-warning { background: var(--warning); color: #fff; }
     .btn-success { background: var(--success); color: #fff; }
-    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn:active { transform: scale(0.98); }
 
-    /* 입력 폼 */
+    /* 입력 요소 */
     .form-row { display: flex; gap: 8px; }
-    input[type="text"], select, textarea { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; }
-    input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--primary); ring: 2px solid var(--primary-light); }
+    input[type="text"], select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
 
-    /* 안건 리스트 */
-    .agenda-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; background: #fff; }
+    /* 안건 목록 카드 */
+    .agenda-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; background: #fff; }
     .agenda-card.active-target { border: 2px solid var(--primary); background: #FAF5FF; }
-    .agenda-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .agenda-header { display: flex; justify-content: space-between; align-items: center; }
     .agenda-title { font-size: 1rem; font-weight: 700; color: #0F172A; }
-    .agenda-info { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+    .agenda-info { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 
-    /* 투표 결과 바 */
-    .vote-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-    .vote-box { background: var(--bg); padding: 8px; border-radius: 8px; text-align: center; font-size: 0.85rem; font-weight: 700; }
-    .vote-box.agree { color: #059669; }
-    .vote-box.disagree { color: #DC2626; }
-    .vote-box.abstain { color: #64748B; }
+    /* 실시간 투표 */
+    .vote-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+    .vote-box { background: var(--bg); padding: 10px; border-radius: 8px; text-align: center; font-size: 0.9rem; font-weight: 700; }
+    .vote-box.agree { color: #059669; background: #ECFDF5; }
+    .vote-box.disagree { color: #DC2626; background: #FEF2F2; }
+    .vote-box.abstain { color: #475569; background: #F1F5F9; }
 
-    /* 의견 영역 */
-    .comments-list { max-height: 250px; overflow-y: auto; margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
-    .comment-item { font-size: 0.85rem; padding: 8px 12px; border-radius: 6px; background: #F1F5F9; }
-    .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-right: 4px; }
+    /* 의견창 */
+    .comments-list { max-height: 220px; overflow-y: auto; margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .comment-item { font-size: 0.85rem; padding: 10px 12px; border-radius: 8px; background: #F8FAFC; border: 1px solid #EEF2F6; }
+    .badge { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-right: 4px; }
     .badge-pros { background: #DCFCE7; color: #166534; }
     .badge-cons { background: #FEE2E2; color: #991B1B; }
     .badge-etc { background: #E0E7FF; color: #3730A3; }
 
-    /* 모달 */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    /* 로그인 모달 */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
     .modal-box { background: #fff; width: 90%; max-width: 360px; padding: 24px; border-radius: 14px; text-align: center; }
   </style>
 </head>
 <body>
 
-  <!-- 입장 모달 (이름 등록 / 교사 선택) -->
+  <!-- 이름 입력 모달 -->
   <div id="loginModal" class="modal-overlay">
     <div class="modal-box">
       <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">6-5 학급회의 입장</h2>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">본인의 이름 또는 역할을 입력해 주세요.</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">본인의 이름 또는 교사 권한을 선택하세요.</p>
       
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <input type="text" id="userNameInput" placeholder="이름 (예: 홍길동)" maxlength="8">
+        <input type="text" id="userNameInput" placeholder="이름 (예: 김철수)" maxlength="8">
         <button class="btn btn-primary" onclick="enterAsStudent()">학생으로 입장하기</button>
         
         <div style="margin: 8px 0; border-top: 1px dashed var(--border);"></div>
         <input type="password" id="teacherPwInput" placeholder="교사 비밀번호 입력" style="display:none;">
-        <button class="btn btn-secondary" id="btnShowTeacherPw" onclick="toggleTeacherMode()">관리 교사 로그인</button>
+        <button class="btn btn-secondary" id="btnShowTeacherPw" onclick="toggleTeacherMode()">관리 교사로 입장</button>
       </div>
     </div>
   </div>
 
-  <!-- 메인 상단 -->
+  <!-- 상단 네비게이션 -->
   <header>
     <div class="header-container">
       <div class="title-group">
         <h1>🏫 6-5 학급회의</h1>
       </div>
-      <div>
-        <span id="userBadge" class="user-tag">미접속</span>
+      <div class="header-right">
+        <span id="userBadge" class="user-tag">미입장</span>
+        <button class="btn btn-logout" onclick="logout()">이름변경</button>
       </div>
     </div>
   </header>
 
-  <!-- 회의 진행 절차 바 -->
+  <!-- 진행 단계 표시 바 -->
   <div class="steps-container">
     <div class="steps">
-      <div class="step-item" id="step-READY">1. 회의 시작</div>
+      <div class="step-item" id="step-READY">1. 회의 준비</div>
       <div class="step-item" id="step-AGENDAS">2. 안건 등록</div>
       <div class="step-item" id="step-COMMENTS">3. 의견 나눔</div>
       <div class="step-item" id="step-VOTE">4. 표결</div>
-      <div class="step-item" id="step-FINISH">5. 최종 정리</div>
+      <div class="step-item" id="step-FINISH">5. 회의 종료</div>
     </div>
   </div>
 
   <main>
-    <!-- [교사 전용 제어 패널] -->
+    <!-- [교사 관리자 패널] -->
     <div id="teacherControl" class="card teacher-panel" style="display: none;">
       <div class="card-title">
-        <span>⚙️ 교사 회의 운영 패널</span>
+        <span>⚙️ 교사 전용 진행 제어</span>
       </div>
+      <h3>단계 변경 (클릭 시 전 학생 화면 동기화)</h3>
+      <div class="btn-group" style="margin-bottom: 12px;">
+        <button class="btn btn-secondary" onclick="setStage('READY')">준비 단계</button>
+        <button class="btn btn-primary" onclick="setStage('AGENDAS')">1. 안건 등록 단계</button>
+        <button class="btn btn-primary" onclick="setStage('COMMENTS')">2. 의견 수렴 단계</button>
+        <button class="btn btn-primary" onclick="setStage('VOTE')">3. 표결 단계</button>
+        <button class="btn btn-success" onclick="setStage('FINISH')">4. 최종 마감</button>
+      </div>
+      <h3>문서 저장</h3>
       <div class="btn-group">
-        <button class="btn btn-secondary" onclick="setStage('READY')">회의 준비</button>
-        <button class="btn btn-primary" onclick="setStage('AGENDAS')">1. 안건 등록 시작</button>
-        <button class="btn btn-primary" onclick="setStage('COMMENTS')">2. 의견 수렴 진행</button>
-        <button class="btn btn-primary" onclick="setStage('VOTE')">3. 표결 단계 진입</button>
-        <button class="btn btn-success" onclick="setStage('FINISH')">4. 회의 마감 및 정리</button>
-        <button class="btn btn-warning" onclick="downloadHwpDocument()">📝 회의록 한글 문서 다운로드</button>
+        <button class="btn btn-warning" onclick="downloadHwpDocument()">📝 회의록 한글 문서(.hwp) 다운로드</button>
       </div>
     </div>
 
-    <!-- [1단계] 안건 등록 영역 -->
+    <!-- [안건 등록 입력창] (단계: AGENDAS) -->
     <div id="agendaInputSection" class="card" style="display: none;">
-      <div class="card-title">안건 발의하기</div>
+      <div class="card-title">💡 새 안건 발의하기</div>
       <div class="form-row">
-        <input type="text" id="agendaTitle" placeholder="안건 명을 입력하세요 (예: 쉬는 시간 휴대폰 보관 규칙 변경)">
-        <button class="btn btn-primary" style="white-space: nowrap;" onclick="submitAgenda()">등록</button>
+        <input type="text" id="agendaTitle" placeholder="안건 제목을 입력하세요 (예: 1인 1역할 규칙 재정비)">
+        <button class="btn btn-primary" style="white-space: nowrap;" onclick="submitAgenda()">안건 등록</button>
       </div>
     </div>
 
-    <!-- [2단계] 안건별 상세 회의 & 실시간 투표 섹션 -->
+    <!-- [현재 논의 중인 안건 & 투표/의견] -->
     <div id="activeDiscussionSection" class="card" style="display: none;">
       <div class="card-title">
-        <span>💡 현재 진행 중인 안건</span>
-        <span id="activeAgendaBadge" class="badge badge-pros">선택됨</span>
+        <span>📌 현재 다루고 있는 안건</span>
+        <span class="badge badge-pros">논의 중</span>
       </div>
-      <h3 id="currentActiveTitle" style="font-size: 1.15rem; margin-bottom: 12px;">안건을 선택해 주세요.</h3>
+      <h2 id="currentActiveTitle" style="font-size: 1.15rem; margin-bottom: 16px; color: #1E293B;">안건이 선택되지 않았습니다.</h2>
 
-      <!-- 투표 진행 영역 (단계가 VOTE일 때 활성화) -->
-      <div id="votingControls" style="display: none; margin-top: 14px; padding: 14px; background: #EEF2FF; border-radius: 8px;">
-        <p style="font-weight: 700; margin-bottom: 8px;">🗳️ 실시간 투표 진행</p>
+      <!-- 투표 구역 (단계: VOTE) -->
+      <div id="votingControls" style="display: none; padding: 14px; background: #EEF2FF; border-radius: 10px; margin-bottom: 16px;">
+        <p style="font-weight: 700; margin-bottom: 10px;">🗳️ 실시간 투표하기</p>
         <div class="btn-group">
           <button class="btn btn-success" onclick="castVote('AGREE')">찬성</button>
           <button class="btn btn-danger" onclick="castVote('DISAGREE')">반대</button>
           <button class="btn btn-secondary" onclick="castVote('ABSTAIN')">기권</button>
         </div>
-        <div class="vote-results" style="margin-top: 12px;">
-          <div class="vote-box agree">찬성: <span id="countAgree">0</span></div>
-          <div class="vote-box disagree">반대: <span id="countDisagree">0</span></div>
-          <div class="vote-box abstain">기권: <span id="countAbstain">0</span></div>
+        <div class="vote-results">
+          <div class="vote-box agree">찬성: <span id="countAgree">0</span>표</div>
+          <div class="vote-box disagree">반대: <span id="countDisagree">0</span>표</div>
+          <div class="vote-box abstain">기권: <span id="countAbstain">0</span>표</div>
         </div>
       </div>
 
-      <!-- 의견 수렴 영역 (단계가 COMMENTS일 때 활성화) -->
-      <div id="commentsSection" style="margin-top: 16px;">
-        <p style="font-weight: 700; margin-bottom: 6px;">의견 남기기</p>
-        <div class="form-row" style="margin-bottom: 10px;">
-          <select id="opinionType" style="width: 100px;">
-            <option value="PROS">찬성</option>
-            <option value="CONS">반대</option>
-            <option value="ETC">기타</option>
+      <!-- 의견 작성/목록 구역 (단계: COMMENTS or VOTE) -->
+      <div id="commentsSection" style="display: none;">
+        <p style="font-weight: 700; margin-bottom: 8px;">💬 이 안건에 대한 나의 생각</p>
+        <div class="form-row" style="margin-bottom: 12px;">
+          <select id="opinionType" style="width: 110px;">
+            <option value="PROS">찬성 입장</option>
+            <option value="CONS">반대 입장</option>
+            <option value="ETC">기타 의견</option>
           </select>
-          <input type="text" id="opinionContent" placeholder="자신의 타당한 근거를 적어주세요.">
-          <button class="btn btn-secondary" onclick="submitOpinion()">남기기</button>
+          <input type="text" id="opinionContent" placeholder="그렇게 생각하는 타당한 근거를 적어주세요.">
+          <button class="btn btn-secondary" style="white-space: nowrap;" onclick="submitOpinion()">등록</button>
         </div>
-        <div class="comments-list" id="commentsList">
-          <!-- 실시간 의견 표시 -->
-        </div>
+        <div class="comments-list" id="commentsList"></div>
       </div>
     </div>
 
-    <!-- 안건 목록 카드 -->
+    <!-- [전체 안건 목록] -->
     <div class="card">
       <div class="card-title">
-        <span>등록된 전체 안건 목록</span>
-        <span id="agendaCount" style="font-size: 0.8rem; color: var(--text-muted);">0건</span>
+        <span>📋 등록된 안건 목록</span>
+        <span id="agendaCount" style="font-size: 0.85rem; color: var(--text-muted);">0건</span>
       </div>
-      <div id="agendaContainer">
-        <!-- 안건 목록 렌더링 -->
-      </div>
+      <div id="agendaContainer"></div>
     </div>
   </main>
 
   <script>
     // -------------------------------------------------------------
-    // 1. Supabase 접속 설정
+    // 1. Supabase 연동 정보
     // -------------------------------------------------------------
     const SUPABASE_URL = "https://mwuukqboltovxoibuicb.supabase.co";
-    const SUPABASE_KEY = "YOUR_ANON_KEY_HERE"; // 발급받은 Anon Public Key를 입력하세요
-    const TEACHER_PW = "1234"; // 관리 교사용 간이 비밀번호
+    const SUPABASE_KEY = "sb_publishable_0Lv4RWRlaEQEGb7Wj1MLng_WqONxQ60"; // 발급받은 Anon 키를 여기에 입력하세요!
+    const TEACHER_PW = "1234"; // 관리 교사 기본 비밀번호
 
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // 사용자 상태
     let currentUser = { name: "", isTeacher: false };
     let currentMeetingState = { stage: "READY", active_agenda_id: null };
     let agendaList = [];
@@ -222,79 +223,109 @@
     let currentVotes = [];
 
     // -------------------------------------------------------------
-    // 2. 인증 & 입장 처리
+    // 2. 자동 로그인(localStorage) 및 인증 관리
     // -------------------------------------------------------------
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedUser = localStorage.getItem("meeting_user");
+      if (savedUser) {
+        try {
+          currentUser = JSON.parse(savedUser);
+          finishLogin();
+          return;
+        } catch (e) {
+          localStorage.removeItem("meeting_user");
+        }
+      }
+      document.getElementById("loginModal").style.display = "flex";
+    });
+
     function toggleTeacherMode() {
       const pwInput = document.getElementById("teacherPwInput");
       const btn = document.getElementById("btnShowTeacherPw");
       if (pwInput.style.display === "none") {
         pwInput.style.display = "block";
         pwInput.focus();
-        btn.textContent = "교사 권한 확인 및 입장";
+        btn.textContent = "비밀번호 확인 및 로그인";
       } else {
         if (pwInput.value === TEACHER_PW) {
           currentUser = { name: "담임 교사", isTeacher: true };
+          localStorage.setItem("meeting_user", JSON.stringify(currentUser));
           finishLogin();
         } else {
-          alert("교사 비밀번호가 일치하지 않습니다.");
+          alert("비밀번호가 일치하지 않습니다.");
         }
       }
     }
 
     function enterAsStudent() {
       const name = document.getElementById("userNameInput").value.trim();
-      if (!name) {
-        alert("이름을 입력해 주세요.");
-        return;
-      }
+      if (!name) return alert("이름을 입력해 주세요.");
       currentUser = { name: name, isTeacher: false };
+      localStorage.setItem("meeting_user", JSON.stringify(currentUser));
       finishLogin();
     }
 
     function finishLogin() {
       document.getElementById("loginModal").style.display = "none";
-      const tag = document.getElementById("userBadge");
-      tag.textContent = currentUser.name;
+      const badge = document.getElementById("userBadge");
+      badge.textContent = currentUser.name;
       if (currentUser.isTeacher) {
-        tag.classList.add("teacher");
+        badge.classList.add("teacher");
         document.getElementById("teacherControl").style.display = "block";
       }
       initData();
     }
 
+    function logout() {
+      localStorage.removeItem("meeting_user");
+      location.reload();
+    }
+
     // -------------------------------------------------------------
-    // 3. 실시간 리스너 & 초기 데이터 로드
+    // 3. 실시간 리스너 및 데이터 동기화
     // -------------------------------------------------------------
     async function initData() {
       await fetchMeetingState();
       await fetchAgendas();
 
-      // Supabase 리얼타임 감지
-      client.channel("realtime-session")
+      // Supabase 리얼타임 구독
+      client.channel("room-all")
         .on("postgres_changes", { event: "*", schema: "public", table: "meeting_state" }, () => fetchMeetingState())
         .on("postgres_changes", { event: "*", schema: "public", table: "agenda" }, () => fetchAgendas())
-        .on("postgres_changes", { event: "*", schema: "public", table: "comments" }, () => fetchComments(currentMeetingState.active_agenda_id))
-        .on("postgres_changes", { event: "*", schema: "public", table: "votes" }, () => fetchVotes(currentMeetingState.active_agenda_id))
+        .on("postgres_changes", { event: "*", schema: "public", table: "comments" }, () => {
+          if (currentMeetingState.active_agenda_id) fetchComments(currentMeetingState.active_agenda_id);
+        })
+        .on("postgres_changes", { event: "*", schema: "public", table: "votes" }, () => {
+          if (currentMeetingState.active_agenda_id) fetchVotes(currentMeetingState.active_agenda_id);
+        })
         .subscribe();
     }
 
     async function fetchMeetingState() {
-      const { data } = await client.from("meeting_state").select("*").eq("id", 1).single();
+      const { data, error } = await client.from("meeting_state").select("*").eq("id", 1).maybeSingle();
+      if (error) console.error("회의 상태 조회 에러:", error);
+
       if (data) {
         currentMeetingState = data;
-        updateUIByStage();
-        if (data.active_agenda_id) {
-          fetchComments(data.active_agenda_id);
-          fetchVotes(data.active_agenda_id);
-        }
+      } else {
+        // 데이터가 아직 없다면 1번 행 강제 생성
+        await client.from("meeting_state").upsert({ id: 1, stage: "READY", active_agenda_id: null });
+        currentMeetingState = { stage: "READY", active_agenda_id: null };
+      }
+
+      updateUI();
+      if (currentMeetingState.active_agenda_id) {
+        fetchComments(currentMeetingState.active_agenda_id);
+        fetchVotes(currentMeetingState.active_agenda_id);
       }
     }
 
     async function fetchAgendas() {
-      const { data } = await client.from("agenda").select("*").order("id", { ascending: true });
-      if (data) {
+      const { data, error } = await client.from("agenda").select("*").order("id", { ascending: true });
+      if (!error && data) {
         agendaList = data;
         renderAgendas();
+        updateUI(); // 안건이 갱신되면 타깃 안건 텍스트도 다시 맞춤
       }
     }
 
@@ -317,31 +348,36 @@
     }
 
     // -------------------------------------------------------------
-    // 4. UI 갱신 로직
+    // 4. 화면 UI 갱신
     // -------------------------------------------------------------
-    function updateUIByStage() {
-      const stage = currentMeetingState.stage;
-      
-      // 단계 표시기 활성화
-      document.querySelectorAll(".step-item").forEach(el => el.classList.remove("active"));
-      const currentStepEl = document.getElementById(`step-${stage}`);
-      if (currentStepEl) currentStepEl.classList.add("active");
+    function updateUI() {
+      const stage = currentMeetingState.stage || "READY";
 
-      // 폼 제어
+      // 상단 바 단계 표시 활성화
+      document.querySelectorAll(".step-item").forEach(el => el.classList.remove("active"));
+      const targetStep = document.getElementById(`step-${stage}`);
+      if (targetStep) targetStep.classList.add("active");
+
+      // 1) 안건 등록창: AGENDAS 단계일 때만 노출
       document.getElementById("agendaInputSection").style.display = (stage === "AGENDAS") ? "block" : "none";
-      
+
+      // 2) 현재 선택된 안건 구역
       const activeSection = document.getElementById("activeDiscussionSection");
       const votingControls = document.getElementById("votingControls");
       const commentsSection = document.getElementById("commentsSection");
 
       if (currentMeetingState.active_agenda_id) {
         activeSection.style.display = "block";
-        const currentItem = agendaList.find(a => a.id === currentMeetingState.active_agenda_id);
-        if (currentItem) {
-          document.getElementById("currentActiveTitle").textContent = `📌 ${currentItem.title} (발의: ${currentItem.proposer})`;
+        const target = agendaList.find(a => a.id === currentMeetingState.active_agenda_id);
+        if (target) {
+          document.getElementById("currentActiveTitle").textContent = `📌 ${target.title} (발의자: ${target.proposer})`;
         }
-        votingControls.style.display = (stage === "VOTE") ? "block" : "none";
-        commentsSection.style.display = (stage === "COMMENTS" || stage === "VOTE") ? "block" : "none";
+
+        // 의견 섹션은 COMMENTS 또는 VOTE 단계일 때 노출
+        commentsSection.style.display = (stage === "COMMENTS" || stage === "VOTE" || stage === "FINISH") ? "block" : "none";
+        
+        // 투표 영역은 VOTE 단계이거나 FINISH 단계(결과보기)일 때 노출
+        votingControls.style.display = (stage === "VOTE" || stage === "FINISH") ? "block" : "none";
       } else {
         activeSection.style.display = "none";
       }
@@ -353,21 +389,23 @@
       container.innerHTML = "";
 
       if (agendaList.length === 0) {
-        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:10px;">등록된 안건이 없습니다.</p>`;
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:12px;">등록된 안건이 없습니다.</p>`;
         return;
       }
 
       agendaList.forEach((agenda) => {
-        const isActive = currentMeetingState.active_agenda_id === agenda.id;
+        const isCurrent = currentMeetingState.active_agenda_id === agenda.id;
         const div = document.createElement("div");
-        div.className = `agenda-card ${isActive ? "active-target" : ""}`;
-        
-        let teacherActions = "";
+        div.className = `agenda-card ${isCurrent ? "active-target" : ""}`;
+
+        let teacherButtons = "";
         if (currentUser.isTeacher) {
-          teacherActions = `
+          teacherButtons = `
             <div style="display:flex; gap:6px;">
-              <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="setActiveAgenda(${agenda.id})">회의대상 지정</button>
-              <button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteAgenda(${agenda.id})">삭제</button>
+              <button class="btn btn-secondary" style="font-size:0.75rem; padding:4px 8px;" onclick="setActiveAgenda(${agenda.id})">
+                ${isCurrent ? '✔ 논의 중' : '회의대상 지정'}
+              </button>
+              <button class="btn btn-danger" style="font-size:0.75rem; padding:4px 8px;" onclick="deleteAgenda(${agenda.id})">삭제</button>
             </div>
           `;
         }
@@ -378,7 +416,7 @@
               <div class="agenda-title">${agenda.title}</div>
               <div class="agenda-info">제안자: ${agenda.proposer}</div>
             </div>
-            ${teacherActions}
+            ${teacherButtons}
           </div>
         `;
         container.appendChild(div);
@@ -388,6 +426,10 @@
     function renderComments() {
       const box = document.getElementById("commentsList");
       box.innerHTML = "";
+      if (commentsList.length === 0) {
+        box.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:8px;">아직 등록된 의견이 없습니다.</div>`;
+        return;
+      }
       commentsList.forEach(c => {
         const item = document.createElement("div");
         item.className = "comment-item";
@@ -408,54 +450,89 @@
       const disagree = currentVotes.filter(v => v.vote_choice === "DISAGREE").length;
       const abstain = currentVotes.filter(v => v.vote_choice === "ABSTAIN").length;
 
-      document.getElementById("countAgree").textContent = `${agree}표`;
-      document.getElementById("countDisagree").textContent = `${disagree}표`;
-      document.getElementById("countAbstain").textContent = `${abstain}표`;
+      document.getElementById("countAgree").textContent = agree;
+      document.getElementById("countDisagree").textContent = disagree;
+      document.getElementById("countAbstain").textContent = abstain;
     }
 
     // -------------------------------------------------------------
-    // 5. 교사 및 학생 상호작용 함수
+    // 5. 기능 제어 함수
     // -------------------------------------------------------------
+    // 단계 변경 (교사 전용)
     async function setStage(stageName) {
-      await client.from("meeting_state").update({ stage: stageName }).eq("id", 1);
-    }
-
-    async function setActiveAgenda(agendaId) {
-      await client.from("meeting_state").update({ active_agenda_id: agendaId }).eq("id", 1);
-    }
-
-    async function deleteAgenda(agendaId) {
-      if (!confirm("안건을 삭제하시겠습니까? 관련 의견과 표결도 사라집니다.")) return;
-      await client.from("agenda").delete().eq("id", agendaId);
-      if (currentMeetingState.active_agenda_id === agendaId) {
-        await client.from("meeting_state").update({ active_agenda_id: null }).eq("id", 1);
+      const { error } = await client.from("meeting_state").upsert({ id: 1, stage: stageName });
+      if (error) {
+        alert("단계 변경 실패: " + error.message);
+      } else {
+        await fetchMeetingState();
       }
     }
 
-    async function submitAgenda() {
-      const title = document.getElementById("agendaTitle").value.trim();
-      if (!title) return alert("안건 내용을 작성하세요.");
-      await client.from("agenda").insert([{ title, proposer: currentUser.name }]);
-      document.getElementById("agendaTitle").value = "";
+    // 논의 안건 지정 (교사 전용)
+    async function setActiveAgenda(agendaId) {
+      const { error } = await client.from("meeting_state").upsert({ id: 1, active_agenda_id: agendaId });
+      if (error) {
+        alert("안건 지정 실패: " + error.message);
+      } else {
+        await fetchMeetingState();
+      }
     }
 
+    // 안건 삭제 (교사 전용)
+    async function deleteAgenda(agendaId) {
+      if (!confirm("정말 이 안건을 삭제할까요? (관련 투표/의견도 함께 삭제됩니다)")) return;
+      const { error } = await client.from("agenda").delete().eq("id", agendaId);
+      if (error) {
+        alert("안건 삭제 실패: " + error.message);
+      } else {
+        if (currentMeetingState.active_agenda_id === agendaId) {
+          await client.from("meeting_state").upsert({ id: 1, active_agenda_id: null });
+        }
+        await fetchAgendas();
+        await fetchMeetingState();
+      }
+    }
+
+    // 안건 등록
+    async function submitAgenda() {
+      const input = document.getElementById("agendaTitle");
+      const title = input.value.trim();
+      if (!title) return alert("안건 내용을 작성해 주세요.");
+
+      const { error } = await client.from("agenda").insert([{ title: title, proposer: currentUser.name }]);
+      if (error) {
+        alert("안건 등록 실패: " + error.message);
+      } else {
+        input.value = "";
+        await fetchAgendas();
+      }
+    }
+
+    // 의견 남기기
     async function submitOpinion() {
       const content = document.getElementById("opinionContent").value.trim();
       const type = document.getElementById("opinionType").value;
-      if (!content) return alert("의견을 작성해 주세요.");
+      if (!content) return alert("의견 내용을 작성해 주세요.");
 
-      await client.from("comments").insert([{
+      const { error } = await client.from("comments").insert([{
         agenda_id: currentMeetingState.active_agenda_id,
         author: currentUser.name,
         opinion_type: type,
         content: content
       }]);
-      document.getElementById("opinionContent").value = "";
+
+      if (error) {
+        alert("의견 등록 실패: " + error.message);
+      } else {
+        document.getElementById("opinionContent").value = "";
+        await fetchComments(currentMeetingState.active_agenda_id);
+      }
     }
 
+    // 실시간 표결 투표
     async function castVote(choice) {
       const agendaId = currentMeetingState.active_agenda_id;
-      if (!agendaId) return;
+      if (!agendaId) return alert("현재 표결 진행 중인 안건이 없습니다.");
 
       const { error } = await client.from("votes").upsert(
         { agenda_id: agendaId, voter: currentUser.name, vote_choice: choice },
@@ -463,38 +540,50 @@
       );
 
       if (error) {
-        alert("투표 반영에 실패했습니다.");
+        alert("투표 실패: " + error.message);
       } else {
-        alert(`${choice === 'AGREE' ? '찬성' : choice === 'DISAGREE' ? '반대' : '기권'} 투표를 완료했습니다.`);
+        alert(`[${choice === 'AGREE' ? '찬성' : choice === 'DISAGREE' ? '반대' : '기권'}] 표가 정상 반영되었습니다.`);
+        await fetchVotes(agendaId);
       }
     }
 
-    // -------------------------------------------------------------
-    // 6. 회의록 문서(한글 HWP/Word 호환) 다운로드
-    // -------------------------------------------------------------
+    // 회의록 한글 문서 다운로드
     async function downloadHwpDocument() {
       let docContent = `
         <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
         <head><meta charset="utf-8"><title>6-5 학급회의록</title></head>
         <body>
-          <h1 style="text-align:center;">6-5 학급회의 최종 결과록</h1>
-          <p><strong>작성일시:</strong> ${new Date().toLocaleDateString('ko-KR')}</p>
+          <h1 style="text-align:center;">6학년 5반 학급회의 회의록</h1>
+          <p><strong>작성 일시:</strong> ${new Date().toLocaleDateString('ko-KR')}</p>
           <hr/>
-          <h2>■ 결정 및 토의 안건 목록</h2>
+          <h2>■ 심의 및 표결 안건 결과</h2>
       `;
 
       for (const agenda of agendaList) {
         const { data: vData } = await client.from("votes").select("*").eq("agenda_id", agenda.id);
+        const { data: cData } = await client.from("comments").select("*").eq("agenda_id", agenda.id);
+
         const agree = vData ? vData.filter(v => v.vote_choice === "AGREE").length : 0;
         const disagree = vData ? vData.filter(v => v.vote_choice === "DISAGREE").length : 0;
         const abstain = vData ? vData.filter(v => v.vote_choice === "ABSTAIN").length : 0;
 
         docContent += `
-          <h3>안건: ${agenda.title}</h3>
-          <p>- 제안자: ${agenda.proposer}</p>
-          <p>- 표결 결과: 찬성 ${agree}표 / 반대 ${disagree}표 / 기권 ${abstain}표</p>
-          <br/>
+          <h3>안건: ${agenda.title} (발의자: ${agenda.proposer})</h3>
+          <p><strong>- 표결 결과:</strong> 찬성 ${agree}표 / 반대 ${disagree}표 / 기권 ${abstain}표</p>
+          <p><strong>- 의견 내역:</strong></p>
+          <ul>
         `;
+
+        if (cData && cData.length > 0) {
+          cData.forEach(c => {
+            const tag = c.opinion_type === "PROS" ? "[찬성]" : c.opinion_type === "CONS" ? "[반대]" : "[기타]";
+            docContent += `<li>${tag} ${c.author}: ${c.content}</li>`;
+          });
+        } else {
+          docContent += `<li>제출된 의견 없음</li>`;
+        }
+
+        docContent += `</ul><br/>`;
       }
 
       docContent += `</body></html>`;
